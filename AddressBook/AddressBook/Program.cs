@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AddressBook
 {
@@ -6,22 +7,25 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
-
-             AddressItem[] addressList =
+            //Creat a address list and initializate it 
+            AddressList addressList = new AddressList();
+             addressList.MyAddressList = new List<AddressItem> 
                 {
-                    new AddressItem("John", "Doe", "1234567890", "XXXXX", "XXXXX"),
-                    new AddressItem("Mike", "Doe", "1234567890", "XXXXX", "XXXXX"),
-                    new AddressItem("Lily", "Doe", "1234567890", "XXXXX", "XXXXX")  
+                    new AddressItem() { firstName = "John", lastName = "Lin", phone = 1234567890, address = "XXXXX", email = "XXXXX" },
+                    new AddressItem() { firstName = "Mike", lastName = "Doe", phone = 1234567890, address = "XXXXX", email = "XXXXX" },
+                    new AddressItem() { firstName = "Lily", lastName = "Doe", phone = 1234567890, address = "XXXXX", email = "XXXXX" }  
                 };
 
             string entry = "";
+            AddressItem item = new AddressItem();
 
             Console.WriteLine("Address Book");
             Console.WriteLine("---------------------------");
             Console.WriteLine("1) View list");
             Console.WriteLine("2) Add address");
             Console.WriteLine("3) Search address");
-            Console.WriteLine("4) Quit");
+            Console.WriteLine("4) Delete address");
+            Console.WriteLine("5) Quit");
 
             while (true)
             {
@@ -29,101 +33,60 @@ namespace AddressBook
 
                 entry = Console.ReadLine();
 
-                //Enter 4 to exit the program
-                if(entry == "4")
+                try
                 {
-                    Console.WriteLine("GoodBye");
-
-                    break;
-                }
-
-                //Enter 1 to view the address book
-                else if (entry == "1")
-                {
-                    Console.WriteLine("View list");
-
-                    foreach(AddressItem addressItem in addressList)
+                    switch (entry)
                     {
-                        Console.WriteLine(addressItem.firstName +" " + 
-                                          addressItem.lastName + ", " +
-                                          addressItem.phone + ", " +
-                                          addressItem.address + ", " +
-                                          addressItem.email);
+                        //Show address list
+                        case "1":
+                            Console.WriteLine("View list");
+                            addressList.showAddressList();
+                            break;
+
+                        //Add new address
+                        case "2":
+                            item.firstName = getEntry("first name");
+                            item.lastName = getEntry("last name");
+
+                            item.phone = int.Parse(getEntry("phone name"));
+
+                            item.address = getEntry("address name");
+                            item.email = getEntry("email name");
+                            addressList.AddAddress(item);
+                            break;
+
+                        //Search address
+                        case "3":
+                            string keyWord = getEntry("key word");
+                            addressList.searchAddress(keyWord);
+                            break;
+
+                        //Delete address
+                        case "4":
+                            int itemNumber = int.Parse(getEntry("item number you want to delete"));
+                            addressList.deleteAddress(itemNumber);
+                            break;
+
+                        //Quit the system
+                        case "5":
+                            Console.WriteLine("GoodBye");
+                            break;
                     }
+                    if (entry == "5")
+                        break;
                 }
-
-                //Enter 2 to add new address to the address book
-                else if (entry == "2")
+                catch (FormatException)
                 {
-                    Console.WriteLine("Add address");
-
-                    //Get the new address
-                    Console.WriteLine("Please enter the first name: ");
-                    string first = Console.ReadLine();
-
-                    Console.WriteLine("Please enter the last name: ");
-                    string last = Console.ReadLine();
-
-                    Console.WriteLine("Please enter the phone number: ");
-                    string phone = Console.ReadLine();
-
-                    Console.WriteLine("Please enter the address: ");
-                    string address = Console.ReadLine();
-
-                    Console.WriteLine("Please enter email: ");
-                    string email = Console.ReadLine();
-
-                    //put the new address in a array
-                    AddressItem[] newItem = { new AddressItem(first, last, phone, address, email) };
-
-                    //assign a new array to concate the old and new address together
-                    AddressItem[] newAddress = new AddressItem[addressList.Length + 1];
-
-                    addressList.CopyTo(newAddress, 0);
-                    newItem.CopyTo(newAddress, addressList.Length);
-
-                    //update the old address book
-                    addressList = new AddressItem[newAddress.Length];
-                    newAddress.CopyTo(addressList,0);
-
+                    Console.WriteLine("Invalid phone number");
                 }
-
-                //Enter 3 to search address
-                else if (entry == "3")
-                {
-                    Console.WriteLine("Search address");
-                    Console.WriteLine("Please enter a key word: ");
-
-                    string keyWord = Console.ReadLine();
-                    int count = 0;
-
-                    foreach(AddressItem addressItem in addressList)
-                    {
-                        //Check whether there's any address contains the keyword
-                        if(addressItem.firstName.ToLower().Contains(keyWord.ToLower())||
-                           addressItem.lastName.ToLower().Contains(keyWord.ToLower()) ||
-                           addressItem.phone.ToLower().Contains(keyWord.ToLower()) ||
-                           addressItem.address.ToLower().Contains(keyWord.ToLower()) ||
-                           addressItem.email.ToLower().Contains(keyWord.ToLower()))
-                        {
-                            count++;
-
-                            Console.WriteLine(addressItem.firstName + " " + 
-                                              addressItem.lastName + ", " +
-                                              addressItem.phone + ", " +
-                                              addressItem.address + ", " +
-                                              addressItem.email);
-                        }
-                    }
-                    if (count == 0)
-                        Console.WriteLine("Sorry! Can't find the address you are looking for!");
-                }
-                else
-                {
-                    Console.WriteLine("Your entry is not valid!");
-                }
-
             }
+        }
+
+        //Get entry from the input
+        public static string getEntry(string s)
+        {
+            Console.WriteLine("Please enter the " + s + " :");
+            return Console.ReadLine();
         }
     }
 }

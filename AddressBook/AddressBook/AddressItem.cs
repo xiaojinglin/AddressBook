@@ -6,22 +6,36 @@ using System.Threading.Tasks;
 
 namespace AddressBook
 {
-    class AddressItem
+    
+    public class AddressItem : IComparable<AddressItem>
     {
-        public readonly string firstName;
-        public readonly string lastName;
-        public readonly string phone;
-        public readonly string address;
-        public readonly string email;
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public int phone { get; set; }
+        public string address { get; set; }
+        public string email { get; set; }
 
-        public AddressItem (string firstName, string lastName, string phone, string address, string email)
+        public int CompareTo(AddressItem other)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.phone = phone;
-            this.address = address;
-            this.email = email;
+            //Sort order by last name
+            return lastName.CompareTo(other.lastName);
         }
 
+        //Show address details
+        public void showAddressItem()
+        {
+            Console.WriteLine(this.firstName + " " + this.lastName + " " + this.phone + " " + this.address + " " + this.email);
+        }
+        
     }
+
+    //Sort order by first name
+    class LastComparer : IComparer<AddressItem>
+    {
+        public int Compare(AddressItem x, AddressItem y)
+        {
+            return x.firstName .CompareTo(y.firstName);
+        }
+    }
+
 }

@@ -17,25 +17,14 @@ namespace AddressBook
 
         public int CompareTo(AddressItem other)
         {
-            //Sort order by last name
-            return lastName.CompareTo(other.lastName);
+            //Sort order first by last name, then by first.
+            return (this.lastName+this.firstName).CompareTo(other.lastName+other.firstName);
         }
 
         //Show address details
         public void showAddressItem()
         {
             Console.WriteLine(this.firstName + " " + this.lastName + " " + this.phone + " " + this.address + " " + this.email);
-        }
-        
+        }       
     }
-
-    //Sort order by first name
-    class LastComparer : IComparer<AddressItem>
-    {
-        public int Compare(AddressItem x, AddressItem y)
-        {
-            return x.firstName .CompareTo(y.firstName);
-        }
-    }
-
 }

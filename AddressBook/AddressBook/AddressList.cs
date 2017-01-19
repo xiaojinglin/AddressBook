@@ -13,7 +13,7 @@ namespace AddressBook
         //Show the address list
         public void showAddressList()
         {
-            MyAddressList.Sort(new LastComparer());
+            MyAddressList.Sort();
             int itemNumber = 1;
             foreach(AddressItem item in MyAddressList)
             {
